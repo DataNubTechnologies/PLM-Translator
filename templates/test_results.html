@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results - PLM Language Translator</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-language me-2"></i>PLM Language Translator
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Translator
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h4 class="card-title mb-0">
+                            <i class="fas fa-clipboard-list me-2 text-primary"></i>Test Results Database
+                        </h4>
+                        <small class="text-muted">Last 20 test results</small>
+                    </div>
+                    <div class="card-body">
+                        {% if results %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Outcome</th>
+                                        <th>Accuracy</th>
+                                        <th>Tested By</th>
+                                        <th>Target Language</th>
+                                        <th>Observation</th>
+                                        <th>Created At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for result in results %}
+                                    <tr>
+                                        <td>{{ result.id }}</td>
+                                        <td>
+                                            <span class="badge {% if result.outcome == 'Success' %}bg-success{% else %}bg-danger{% endif %}">
+                                                {{ result.outcome }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if result.accuracy %}
+                                                {{ "%.1f"|format(result.accuracy) }}%
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ result.tested_by or '-' }}</td>
+                                        <td>{{ result.target_language or '-' }}</td>
+                                        <td>
+                                            {% if result.observation %}
+                                                <span title="{{ result.observation }}" data-bs-toggle="tooltip">
+                                                    {{ result.observation[:50] }}{% if result.observation|length > 50 %}...{% endif %}
+                                                </span>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if result.created_at %}
+                                                {{ result.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-database fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No test results found</h5>
+                            <p class="text-muted">Test some translations first to see results here.</p>
+                            <a href="/" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Create Test Results
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-light">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Total results: {{ results|length }}
+                                </small>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <a href="/api/test-results" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-code me-1"></i>View API JSON
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+</body>
+</html>

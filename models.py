@@ -21,8 +21,8 @@ class TestResult(db.Model):
     tested_by = db.Column(db.String(100), nullable=True)  # Who tested it
     text_to_translate = db.Column(Text().with_variant(NVARCHAR(None), 'mssql'), nullable=True)  # Original text with Unicode support
     translated_text = db.Column(Text().with_variant(NVARCHAR(None), 'mssql'), nullable=True)  # Translated text with Unicode support
-    source_language = db.Column(db.String(10), nullable=True)  # Source language code
-    target_language = db.Column(db.String(10), nullable=True)  # Target language code
+    source_language = db.Column(db.String(50), nullable=True)  # Source language code
+    target_language = db.Column(db.String(50), nullable=True)  # Target language code
     session_id = db.Column(db.String(100), nullable=True)  # Session identifier
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))  # When created
     
